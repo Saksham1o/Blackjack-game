@@ -221,3 +221,81 @@ def play_blackjack(deck):
            print('PLAYER CARDS: ')
            show_cards(player_cards, False)
            print('PLAYER SCORE = ', player_score)
+   os.system('clear')
+   print('PLAYER CARDS: ')
+   show_cards(player_cards, False)
+   print('PLAYER SCORE = ', player_score)
+   print()
+   print('DEALER IS REVEALING THEIR CARDS....')
+   print('DEALER CARDS: ')
+   show_cards(dealer_cards, False)
+   print('DEALER SCORE = ', dealer_score)
+
+   if player_score == 21:
+       print('PLAYER HAS A BLACKJACK, PLAYER WINS!!!')
+       quit()
+
+   if player_score > 21:
+       print('PLAYER BUSTED!!! GAME OVER!!!')
+       quit()
+
+   input('Continue...')
+   while dealer_score < 17:
+       os.system('clear')
+       print('DEALER DECIDES TO HIT.....')
+       dealer_card, deck = deal_card(deck)
+       dealer_cards.append(dealer_card)
+       dealer_score += dealer_card.value
+
+       # If dealt an Ace, adjust score for each existing Ace in hand
+       card_pos = 0
+       while dealer_score > 21 and card_pos < len(dealer_cards):
+           if dealer_cards[card_pos].value == 11:
+               dealer_cards[card_pos].value = 1
+               dealer_score -= 10
+               card_pos += 1
+           else:
+               card_pos += 1
+
+       print('PLAYER CARDS: ')
+       show_cards(player_cards, False)
+       print('PLAYER SCORE = ', player_score)
+       print()
+       print('DEALER CARDS: ')
+       show_cards(dealer_cards, False)
+       print('DEALER SCORE = ', dealer_score)
+       if dealer_score > 21:
+           break
+       input('Continue...')
+
+   if dealer_score > 21:
+       print('DEALER BUSTED!!! YOU WIN!!!')
+       quit()
+   elif dealer_score == 21:
+       print('DEALER HAS A BLACKJACK!!! PLAYER LOSES!!!')
+       quit()
+   elif dealer_score == player_score:
+       print('TIE GAME!!!!')
+   elif player_score > dealer_score:
+       print('PLAYER WINS!!!')
+   else:
+       print('DEALER WINS!!!')
+
+
+def init_deck():
+   suits = ['Spades', 'Hearts', 'Clubs', 'Diamonds']
+   # UNICODE values for card symbol images
+   suit_symbols = {'Hearts': '\u2661', 'Diamonds': '\u2662',
+                   'Spades': '\u2664', 'Clubs': '\u2667'}
+   cards = {'A': 11, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6,
+            '7': 7, '8': 8, '9': 9, '10': 10, 'J': 10, 'Q': 10, 'K': 10}
+   deck = []
+   for suit in suits:
+       for card, value in cards.items():
+           deck.append(Card(card, value, suit_symbols[suit]))
+   return deck
+
+
+if __name__ == '__main__':
+   deck = init_deck()
+   play_blackjack(deck)
